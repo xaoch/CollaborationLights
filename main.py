@@ -35,7 +35,7 @@ def initStudents():
         global studentPercentage
 
         for i in range(0,numberStudents):
-                studentStatus[i]= "HighAlert"
+                studentStatus[i]= "Middle"
                 studentTime[i]= 600
                 studentPercentage[i]=100/numberStudents
                 studentRecentTime[i]=300
@@ -105,7 +105,7 @@ def showStudentStatus():
         led.update()
 
 def recomputePercentages():
-        1+1
+        print(studentTime)
 
 if dev:
         showStudentStatus()
