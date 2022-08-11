@@ -23,6 +23,7 @@ numberStudents = 4
 studentStatus = [None]*numberStudents
 studentTime = [None]*numberStudents
 studentRecentTime =[None]*numberStudents
+studentSpeaking=[None]*numberStudents
 
 
 def initStudents():
