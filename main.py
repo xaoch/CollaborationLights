@@ -35,7 +35,7 @@ def initStudents():
         global studentPercentage
 
         for i in range(0,numberStudents):
-                studentStatus[i]= "Middle"
+                studentStatus[i]= "LowAlert"
                 studentTime[i]= 600
                 studentPercentage[i]=100/numberStudents
                 studentRecentTime[i]=300
