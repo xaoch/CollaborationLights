@@ -84,13 +84,13 @@ def drawShape(status,startingColumn,endingColumn):
                         for row in range(1,7):
                                 led.set(column,row,(0,0,200))
         elif status=="HighAlert":
-                for column in range(startingColumn+1,endingColumn+7):
+                for column in range(startingColumn+1,startingColumn+7):
                         for row in range(1,7):
                                 led.set(column,row,(0,0,200))
                 for row in range(1,7):
                         led.set(startingColumn+1,row,(200,200,0))
                         led.set(startingColumn+6,row,(200,200,0))
-                for column in range(startingColumn+1,endingColumn+7):
+                for column in range(startingColumn+1,startingColumn+7):
                         led.set(column,1,(200,200,0))
                         led.set(column,6,(200,200,0))
 
