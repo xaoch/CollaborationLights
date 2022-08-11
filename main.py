@@ -65,7 +65,6 @@ def clear():
                         led.set(j,i,(0,0,0))
 
 def drawShape(status,startingColumn,endingColumn):
-        clear()
         width = endingColumn - startingColumn
         height=8
         if status=="LowAlert":
@@ -115,6 +114,7 @@ if dev:
         while True:
                 if totalTime % 30 == 0:
                         recomputePercentages()
+                        clear()
                         showStudentStatus()
                 try:
                         if Mic_tuning.is_voice():
