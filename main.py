@@ -21,24 +21,22 @@ silence=0
 numberStudents = 4
 
 studentStatus = [None]*numberStudents
-
 studentTime = [None]*numberStudents
-
 studentRecentTime =[None]*numberStudents
 
-studentPercentage = [None]*numberStudents
 
 def initStudents():
         global studentStatus
         global studentTime
         global studentRecentTime
-        global studentPercentage
+        global studentSpeaking
+
 
         for i in range(0,numberStudents):
                 studentStatus[i]= "Middle"
                 studentTime[i]= 600
-                studentPercentage[i]=100/numberStudents
                 studentRecentTime[i]=300
+                studentSpeaking[i]=0
 
 initStudents()
 
@@ -105,14 +103,34 @@ def showStudentStatus():
         led.update()
 
 def recomputePercentages():
-        print(studentTime)
+        totalSpeakingTime=0
+        totalRecentSpeakingTime=0
+        for i in range(1,numberStudents):
+                studentTime[i]=studentTime[i]+studentSpeaking[i]
+                totalSpeakingTime=totalSpeakingTime+studentTime[i]
+                studentRecentTime[i]=studentRecentTime[i]+studentSpeaking[i]
+                totalRecentSpeakingTime=totalRecentSpeakingTime+studentRecentTime[i]
+                studentSpeaking[i]=0
+        for i in range(1,numberStudents):
+                percentage=studentTime[i]/totalSpeakingTime
+                percentageRecent=studentRecentTime[i]/totalRecentSpeakingTime
+                if percentage>0.75:
+                        studentStatus[i]="HighAlert"
+                elif percentage>0.5:
+                        studentStatus[i]="High"
+                elif percentage>0.25:
+                        studentStatus[i]="Middle"
+                elif percentage>0.10:
+                        studentStatus[i]="Low"
+                else:
+                        studentStatus[i]="LowAlert"
 
 if dev:
         showStudentStatus()
         Mic_tuning= Tuning(dev)
         totalTime = totalTime + 1
         while True:
-                if totalTime % 30 == 0:
+                if totalTime % 300 == 0:
                         recomputePercentages()
                         clear()
                         showStudentStatus()
@@ -123,8 +141,7 @@ if dev:
                                 student=int(round((doa/360)*4,0))
                                 if student == numberStudents:
                                         student=0
-                                studentTime[student]=studentTime[student]+1
-                                studentRecentTime[student]=studentRecentTime[student]+1
+                                studentSpeaking[student]=studentSpeaking[student]+1
                         else:
                                 silence=silence+1
                         time.sleep(0.1)
