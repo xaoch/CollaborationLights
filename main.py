@@ -94,8 +94,8 @@ def showStudentStatus():
         global studentTime
         global studentRecentTime
         for i in range(0,numberStudents):
-                startingColumn = i*(32 / numberStudents)
-                endingColumn = (i+1)*(32 / numberStudents)
+                startingColumn = int(i*(32 / numberStudents))
+                endingColumn = int((i+1)*(32 / numberStudents))
                 drawShape(studentStatus[i],startingColumn,endingColumn)
         led.update()
 
