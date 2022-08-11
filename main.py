@@ -59,7 +59,13 @@ for i in range(8):
 led=Matrix(driver,width=32,height=8,coord_map=coords)
 dev = usb.core.find(idVendor=0x2886, idProduct=0x0018)
 
+def clear():
+        for i in range(0,8):
+                for j in range(0,32):
+                        led.set(j,i,(0,0,0))
+
 def drawShape(status,startingColumn,endingColumn):
+        clear()
         width = endingColumn - startingColumn
         height=8
         if status=="LowAlert":
