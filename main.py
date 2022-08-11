@@ -96,7 +96,7 @@ def showStudentStatus():
         for i in range(0,numberStudents):
                 startingColumn = i*(32 / numberStudents)
                 endingColumn = (i+1)*(32 / numberStudents)
-                drawShape(studentStatus,startingColumn,endingColumn)
+                drawShape(studentStatus[i],startingColumn,endingColumn)
         led.update()
 
 def recomputePercentages():
@@ -115,6 +115,8 @@ if dev:
                                 speech=speech+1
                                 doa=Mic_tuning.direction
                                 student=int(round((doa/360)*4,0))
+                                if student == numberStudents:
+                                        student=0
                                 studentTime[student]=studentTime[student]+1
                                 studentRecentTime[student]=studentRecentTime[student]+1
                         else:
