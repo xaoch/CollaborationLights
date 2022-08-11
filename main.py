@@ -15,6 +15,34 @@ import usb.core
 import usb.util
 import time
 
+totalTime=0
+speech=0
+silence=0
+numberStudents = 4
+
+studentStatus = [None]*numberStudents
+
+studentTime = [None]*numberStudents
+
+studentRecentTime =[None]*numberStudents
+
+studentPercentage = [None]*numberStudents
+
+def initStudents():
+        global studentStatus
+        global studentTime
+        global studentRecentTime
+        global studentPercentage
+
+        for i in range(0,numberStudents):
+                studentStatus[i]= "Middle"
+                studentTime[i]= 600
+                studentPercentage[i]=100/numberStudents
+                studentRecentTime[i]=300
+
+initStudents()
+
+
 driver=PiWS281X(8*32)
 coords=[]
 for i in range(8):
@@ -29,66 +57,73 @@ for i in range(8):
         coords.append(row)
 
 led=Matrix(driver,width=32,height=8,coord_map=coords)
-
 dev = usb.core.find(idVendor=0x2886, idProduct=0x0018)
 
-values=[0 for i in range(32)]
+def drawShape(status,startingColumn,endingColumn):
+        width = endingColumn - startingColumn
+        height=8
+        if status=="LowAlert":
+                for column in range(startingColumn+3,startingColumn+5):
+                        for row in range(3,5):
+                                led.set(column,row,(200,200,0))
+        elif status=="Low":
+                for column in range(startingColumn+3,startingColumn+5):
+                        for row in range(3,5):
+                                led.set(column,row,(0,0,200))
+        elif status=="Middle":
+                for column in range(startingColumn+2,startingColumn+6):
+                        for row in range(2,6):
+                                led.set(column,row,(0,0,200))
+        elif status=="High":
+                for column in range(startingColumn+1,startingColumn+7):
+                        for row in range(1,7):
+                                led.set(column,row,(0,0,200))
+        elif status=="HighAlert":
+                for column in range(startingColumn+1,endingColumn+7):
+                        for row in range(1,7):
+                                led.set(column,row,(0,0,200))
+                for row in range(1,7):
+                        led.set(startingColumn+1,row,(200,200,0))
+                        led.set(startingColumn+6,row,(200,200,0))
+                for column in range(startingColumn+1,endingColumn+7):
+                        led.set(column,1,(200,200,0))
+                        led.set(column,6,(200,200,0))
 
-def showInMatrix(values,totalSpeech):
-        column=0
-        blank=(0,0,0)
-        print(values)
-        for rowValue in values:
-                relativeTime = int((rowValue/totalSpeech)*8)
-                if relativeTime<4:
-                        color=(200,0,0)
-                elif relativeTime<7:
-                        color=(220,190,0)
-                else:
-                        color=(0,200,0)
-                for i in range(0,8):
-                        if i<relativeTime:
-                                led.set(column,7-i,color)
-                        else:
-                                led.set(column,7-i,blank)
-                column=column+1
+def showStudentStatus():
+        global studentStatus
+        global studentTime
+        global studentRecentTime
+        for i in range(0,numberStudents):
+                startingColumn = i*(32 / numberStudents)
+                endingColumn = (i+1)*(32 / numberStudents)
+                drawShape(studentStatus,startingColumn,endingColumn)
         led.update()
 
+def recomputePercentages():
+        1+1
+
 if dev:
-        totalSpeech=80
-        speech=0
-        showInMatrix(values,totalSpeech)
+        showStudentStatus()
         Mic_tuning= Tuning(dev)
+        totalTime = totalTime + 1
         while True:
+                if totalTime % 30 == 0:
+                        recomputePercentages()
+                        showStudentStatus()
                 try:
                         if Mic_tuning.is_voice():
                                 speech=speech+1
-                                if totalSpeech<speech:
-                                        totalSpeech=speech
                                 doa=Mic_tuning.direction
-                                print(doa)
-                                column=int(round((doa/360)*32,0))
-                                if(column==32):
-                                        column=0
-                                values[column]=values[column]+1
-                                if column>0:
-                                        values[column-1]=values[column-1]+0.5
-                                if column==0:
-                                        values[31]=values[31]+0.5
-                                if column<31:
-                                        values[column+1]=values[column+1]+0.5
-                                if column==31:
-                                        values[0]=values[0]+0.5
-                                showInMatrix(values,totalSpeech)
-
+                                student=int(round((doa/360)*4,0))
+                                studentTime[student]=studentTime[student]+1
+                                studentRecentTime[student]=studentRecentTime[student]+1
+                        else:
+                                silence=silence+1
                         time.sleep(0.1)
+                        totalTime=totalTime+1
                 except KeyboardInterrupt:
                         break
 
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
