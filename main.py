@@ -103,6 +103,7 @@ def showStudentStatus():
         led.update()
 
 def recomputePercentages():
+        print(studentTime)
         totalSpeakingTime=0
         totalRecentSpeakingTime=0
         for i in range(1,numberStudents):
