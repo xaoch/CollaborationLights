@@ -26,6 +26,7 @@ config.read(sys.argv[1])
 ipMqttServer = config["DEFAULT"]["MQTTServerIp"]
 portMqttServer = config["DEFAULT"]["MQTTServerPort"]
 Mode = config["DEFAULT"]["Mode"]
+correction = config["DEFAULT"]["Correction"]
 numberStudents = 4
 
 sensorName = "Microphone"
@@ -185,7 +186,7 @@ def record(recordingId):
           if Mic_tuning.is_voice():
                speech=speech+1
                doa=Mic_tuning.direction
-               student=int(round((doa/360)*4,0))
+               student=int(round((doa/360)*4,0))+correction
                if student == numberStudents:
                     student=0
                print(student)
