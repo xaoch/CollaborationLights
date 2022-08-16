@@ -56,7 +56,7 @@ def initStudents():
         for i in range(0,numberStudents):
                 studentStatus[i]= "Middle"
                 client.publish("collaborationLights/studentStatus", str(i) + "/Middle")
-                studentTime[i]= 60
+                studentTime[i]= 240
                 studentRecentTime[i]=300
                 studentSpeaking[i]=0
 
@@ -179,7 +179,7 @@ def record(recordingId):
     Mic_tuning= Tuning(dev)
     totalTime = totalTime + 1
     while True:
-          if totalTime % 30 == 0:
+          if totalTime % 120 == 0:
                recomputePercentages()
                clear()
                showStudentStatus()
