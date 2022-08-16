@@ -172,18 +172,14 @@ def update():
 def record(recordingId):
     global sensorStatus
     global stopSignal
-
+    print("Recording")
     filePath = os.path.join("recordings", str(recordingId)+".csv")
     f = open(filePath, 'w')
     # create the csv writer
     writer = csv.writer(f)
-
     # write a row to the csv file
     writer.writerow(['time', 'student'])
-
-    # close the file
-
-
+    print("File created")
     sensorStatus="recording"
     stopSignal=False
     update()
