@@ -134,22 +134,22 @@ def recomputePercentages():
                 studentRecentTime[i]=studentRecentTime[i]+studentSpeaking[i]
                 totalRecentSpeakingTime=totalRecentSpeakingTime+studentRecentTime[i]
                 studentSpeaking[i]=0
-        for i in range(1,numberStudents):
+        for i in range(0,numberStudents):
                 percentage=studentTime[i]/totalSpeakingTime
                 percentageRecent=studentRecentTime[i]/totalRecentSpeakingTime
-                if percentage>0.75:
+                if percentage>0.50:
                         if studentStatus[i]!="HighAlert":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/HighAlert")
                         studentStatus[i]="HighAlert"
-                elif percentage>0.5:
+                elif percentage>0.35:
                         if studentStatus[i]!="High":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/High")
                         studentStatus[i]="High"
-                elif percentage>0.25:
+                elif percentage>0.15:
                         if studentStatus[i]!="Middle":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                         studentStatus[i]="Middle"
-                elif percentage>0.10:
+                elif percentage>0.05:
                         if studentStatus[i]!="Low":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Low")
                         studentStatus[i]="Low"
