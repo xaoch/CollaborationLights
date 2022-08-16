@@ -193,7 +193,6 @@ def record(recordingId):
                studentSpeaking[student]=studentSpeaking[student]+1
           else:
               silence=silence+1
-              print(silence)
           time.sleep(0.1)
           totalTime=totalTime+1
           if stopSignal:
