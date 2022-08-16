@@ -17,6 +17,10 @@ import usb.core
 import usb.util
 import time
 import os
+import sys
+
+config = configparser.ConfigParser()
+config.read(sys.argv[1])
 
 ipMqttServer = config["DEFAULT"]["MQTTServerIp"]
 portMqttServer = config["DEFAULT"]["MQTTServerPort"]
