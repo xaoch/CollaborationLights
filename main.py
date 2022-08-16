@@ -125,6 +125,7 @@ def showStudentStatus():
         global studentStatus
         global studentTime
         global studentRecentTime
+        led.fillScreen((0, 0, 0))
         for i in range(0,numberStudents):
                 startingColumn = int(i*(32 / numberStudents))
                 endingColumn = int((i+1)*(32 / numberStudents))
@@ -236,6 +237,7 @@ def stop_recording():
         stopSignal=True
         print("Stoping")
         recordingThread.join()
+        showPositions()
     else:
         print("Not recording")
     update()
