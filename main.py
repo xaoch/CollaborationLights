@@ -59,9 +59,10 @@ def initStudents():
                 studentRecentTime[i]=300
                 studentSpeaking[i]=0
 
-def initilization():
+def initialization():
         global dev
         global led
+
         driver=PiWS281X(8*32)
         coords=[]
         for i in range(8):
@@ -259,6 +260,7 @@ def on_message(client, userdata, msg):
 
 
 client = mqtt.Client()
+initialization()
 sensorStatus="ready"
 while(True):
     try:
