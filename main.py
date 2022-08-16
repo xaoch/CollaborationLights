@@ -56,7 +56,7 @@ def initStudents():
 
         for i in range(0,numberStudents):
                 studentStatus[i]= "Middle"
-                client.publish("collaborationLights/studentStatus", str(i) + "/Middle")
+                client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                 studentTime[i]= 240
                 studentRecentTime[i]=300
                 studentSpeaking[i]=0
