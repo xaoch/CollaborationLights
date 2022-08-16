@@ -198,9 +198,10 @@ def record():
 
 def start_recording():
         global recordingThread
-
+        print("Initializing recording thread")
         recordingThread = threading.Thread(target=record)
         recordingThread.start()
+        print("Recording thread initialized")
 
 def stop_recording():
     global sensorStatus
