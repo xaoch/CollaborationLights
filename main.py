@@ -214,6 +214,7 @@ def on_message(client, userdata, msg):
     messagePart = message.split(",")
     if (messagePart[0] in "start"):
         if (sensorStatus == "ready"):
+            print("Starting")
             recordingId=messagePart[1]
             start_recording(recordingId)
         else:
