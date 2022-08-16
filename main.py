@@ -217,7 +217,7 @@ def on_message(client, userdata, msg):
             recordingId=messagePart[1]
             start_recording(recordingId)
         else:
-            print("Already recording")
+            print("Not ready")
     elif (messagePart[0] in "stop"):
         if (sensorStatus== "recording"):
             stop_recording()
@@ -251,6 +251,7 @@ while(True):
         client.connect(ipMqttServer, int(portMqttServer), 60)
         client.on_connect = on_connect
         client.on_message = on_message
+        sensorStatus="ready"
         client.loop_forever()
     except:
         time.sleep(1)
