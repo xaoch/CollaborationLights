@@ -171,7 +171,6 @@ def record(recordingId):
     global stopSignal
 
     filePath = os.path.join("recordings", str(recordingId)+".csv")
-    os.mkdir(directoryPath)
     f = open(filePath, 'w')
     # create the csv writer
     writer = csv.writer(f)
