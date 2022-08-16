@@ -26,7 +26,7 @@ config.read(sys.argv[1])
 ipMqttServer = config["DEFAULT"]["MQTTServerIp"]
 portMqttServer = config["DEFAULT"]["MQTTServerPort"]
 Mode = config["DEFAULT"]["Mode"]
-correction = config["DEFAULT"]["Correction"]
+correction = int(config["DEFAULT"]["Correction"])
 numberStudents = 4
 
 sensorName = "Microphone"
