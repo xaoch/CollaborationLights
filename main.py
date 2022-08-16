@@ -283,10 +283,12 @@ def on_message(client, userdata, msg):
         os.system("sudo reboot")
 
 def showPositions():
+    led.fillScreen((0,0,0))
     led.drawText("1", x=0, y=0, color=(200,200,200), bg=(0, 0, 0), aa=False, font='8x6', font_scale=1)
     led.drawText("2", x=0, y=7, color=(200,200,200), bg=(0, 0, 0), aa=False, font='8x6', font_scale=1)
     led.drawText("3", x=0, y=15, color=(200,200,200), bg=(0, 0, 0), aa=False, font='8x6', font_scale=1)
     led.drawText("4", x=0, y=23, color=(200,200,200), bg=(0, 0, 0), aa=False, font='8x6', font_scale=1)
+    led.update()
 
 client = mqtt.Client()
 initialization()
