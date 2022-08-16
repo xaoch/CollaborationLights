@@ -178,7 +178,7 @@ def record(recordingId):
     Mic_tuning= Tuning(dev)
     totalTime = totalTime + 1
     while True:
-          if totalTime % 300 == 0:
+          if totalTime % 30 == 0:
                recomputePercentages()
                clear()
                showStudentStatus()
