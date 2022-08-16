@@ -80,8 +80,11 @@ def initialization():
         led = Matrix(driver,width=32,height=8,coord_map=coords)
         dev = usb.core.find(idVendor=0x2886, idProduct=0x0018)
 
-        directoryPath = os.path.join("recordings")
-        os.mkdir(directoryPath)
+        try:
+            directoryPath = os.path.join("recordings")
+            os.mkdir(directoryPath)
+        except OSError:
+            print("Directory already exists")
 
 def clear():
         for i in range(0,8):
