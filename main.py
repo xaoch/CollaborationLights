@@ -278,6 +278,7 @@ def on_message(client, userdata, msg):
         print("Updating Software")
         os.system("git pull origin master")
         print("Software Updated")
+        os.system("sudo reboot")
         if (sensorStatus=="recording"):
             stop_recording()
         os.system("sudo reboot")
