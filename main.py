@@ -212,6 +212,7 @@ def on_message(client, userdata, msg):
     global sensorStatus
     message = msg.payload.decode()
     messagePart = message.split(",")
+    print(messagePart)
     if (messagePart[0] in "start"):
         if (sensorStatus == "ready"):
             print("Starting")
