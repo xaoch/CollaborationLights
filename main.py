@@ -186,7 +186,7 @@ def record(recordingId):
           if Mic_tuning.is_voice():
                speech=speech+1
                doa=Mic_tuning.direction
-               student=int(round((doa/360)*4,0))+correction
+               student=int(round(((doa+correction)/360)*4,0))
                if student == numberStudents:
                     student=0
                print(student)
