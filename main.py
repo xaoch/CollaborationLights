@@ -183,9 +183,11 @@ def record(recordingId):
                clear()
                showStudentStatus()
           if Mic_tuning.is_voice():
+               print("Voice")
                speech=speech+1
                doa=Mic_tuning.direction
                student=int(round((doa/360)*4,0))
+               print(student)
                if student == numberStudents:
                     student=0
                studentSpeaking[student]=studentSpeaking[student]+1
