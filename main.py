@@ -127,7 +127,7 @@ def recomputePercentages():
         print(studentTime)
         totalSpeakingTime=0
         totalRecentSpeakingTime=0
-        for i in range(1,numberStudents):
+        for i in range(0,numberStudents):
                 studentTime[i]=studentTime[i]+studentSpeaking[i]
                 totalSpeakingTime=totalSpeakingTime+studentTime[i]
                 studentRecentTime[i]=studentRecentTime[i]+studentSpeaking[i]
@@ -187,7 +187,6 @@ def record(recordingId):
                speech=speech+1
                doa=Mic_tuning.direction
                student=int(round((doa/360)*4,0))
-               print(student)
                if student == numberStudents:
                     student=0
                studentSpeaking[student]=studentSpeaking[student]+1
