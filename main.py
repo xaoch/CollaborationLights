@@ -160,7 +160,7 @@ def update():
         client.publish("collaborationLights/heartbeat", sensorName + "," + sensorStatus)
 
 
-def record():
+def record(recordingId):
     global sensorStatus
     global stopSignal
 
@@ -196,10 +196,10 @@ def record():
              sensorStatus = "ready"
              break
 
-def start_recording():
+def start_recording(recordingId):
         global recordingThread
         print("Initializing recording thread")
-        recordingThread = threading.Thread(target=record)
+        recordingThread = threading.Thread(target=record, args=(recordingId,))
         recordingThread.start()
         print("Recording thread initialized")
 
