@@ -170,18 +170,18 @@ def start_recording():
         totalTime = totalTime + 1
         while True:
                 if totalTime % 300 == 0:
-                        recomputePercentages()
-                        clear()
-                        showStudentStatus()
+                    recomputePercentages()
+                    clear()
+                    showStudentStatus()
                 if Mic_tuning.is_voice():
-                      speech=speech+1
-                      doa=Mic_tuning.direction
-                      student=int(round((doa/360)*4,0))
-                     if student == numberStudents:
-                               student=0
-                     studentSpeaking[student]=studentSpeaking[student]+1
+                    speech=speech+1
+                    doa=Mic_tuning.direction
+                    student=int(round((doa/360)*4,0))
+                    if student == numberStudents:
+                        student=0
+                    studentSpeaking[student]=studentSpeaking[student]+1
                 else:
-                     silence=silence+1
+                    silence=silence+1
                 time.sleep(0.1)
                 totalTime=totalTime+1
                 if stopSignal:
