@@ -138,23 +138,23 @@ def recomputePercentages():
                 percentageRecent=studentRecentTime[i]/totalRecentSpeakingTime
                 if percentage>0.75:
                         if studentStatus[i]!="HighAlert":
-                                client.publish("collaborationLights/studentStatus", str(i) + "/HighAlert")
+                                client.publish("collaborationLights/studentStatus", str(i+1) + "/HighAlert")
                         studentStatus[i]="HighAlert"
                 elif percentage>0.5:
                         if studentStatus[i]!="High":
-                                client.publish("collaborationLights/studentStatus", str(i) + "/High")
+                                client.publish("collaborationLights/studentStatus", str(i+1) + "/High")
                         studentStatus[i]="High"
                 elif percentage>0.25:
                         if studentStatus[i]!="Middle":
-                                client.publish("collaborationLights/studentStatus", str(i) + "/Middle")
+                                client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                         studentStatus[i]="Middle"
                 elif percentage>0.10:
                         if studentStatus[i]!="Low":
-                                client.publish("collaborationLights/studentStatus", str(i) + "/Low")
+                                client.publish("collaborationLights/studentStatus", str(i+1) + "/Low")
                         studentStatus[i]="Low"
                 else:
                         if studentStatus[i]!="LowAlert":
-                                client.publish("collaborationLights/studentStatus", str(i) + "/LowAlert")
+                                client.publish("collaborationLights/studentStatus", str(i+1) + "/LowAlert")
                         studentStatus[i]="LowAlert"
 
 def update():
@@ -183,12 +183,12 @@ def record(recordingId):
                clear()
                showStudentStatus()
           if Mic_tuning.is_voice():
-               print("Voice")
                speech=speech+1
                doa=Mic_tuning.direction
                student=int(round((doa/360)*4,0))
                if student == numberStudents:
                     student=0
+               print(student)
                studentSpeaking[student]=studentSpeaking[student]+1
           else:
               silence=silence+1
