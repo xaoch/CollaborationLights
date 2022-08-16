@@ -285,10 +285,10 @@ def on_message(client, userdata, msg):
 
 def showPositions():
     led.fillScreen((0,0,0))
-    led.drawText("1", x=0, y=0, color=(200,200,200), bg=(0, 0, 0), aa=False, font='8x6', font_scale=1)
-    led.drawText("2", x=7, y=0, color=(200, 200, 200), bg=(0, 0, 0), aa=False, font='8x6', font_scale=1)
-    led.drawText("3", x=15, y=0, color=(200, 200, 200), bg=(0, 0, 0), aa=False, font='8x6', font_scale=1)
-    led.drawText("4", x=23, y=0, color=(200, 200, 200), bg=(0, 0, 0), aa=False, font='8x6', font_scale=1)
+    led.drawText("1", x=0, y=0, color=(200,200,200), bg=(0, 0, 0), aa=False, font='8x8', font_scale=1)
+    led.drawText("2", x=7, y=0, color=(200, 200, 200), bg=(0, 0, 0), aa=False, font='8x8', font_scale=1)
+    led.drawText("3", x=15, y=0, color=(200, 200, 200), bg=(0, 0, 0), aa=False, font='8x8', font_scale=1)
+    led.drawText("4", x=23, y=0, color=(200, 200, 200), bg=(0, 0, 0), aa=False, font='8x8', font_scale=1)
     led.update()
 
 client = mqtt.Client()
