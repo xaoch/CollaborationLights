@@ -19,6 +19,7 @@ import time
 import os
 import sys
 import threading
+import csv
 
 config = configparser.ConfigParser()
 config.read(sys.argv[1])
@@ -78,6 +79,9 @@ def initialization():
                 coords.append(row)
         led = Matrix(driver,width=32,height=8,coord_map=coords)
         dev = usb.core.find(idVendor=0x2886, idProduct=0x0018)
+
+        directoryPath = os.path.join("recordings")
+        os.mkdir(directoryPath)
 
 def clear():
         for i in range(0,8):
@@ -166,6 +170,18 @@ def record(recordingId):
     global sensorStatus
     global stopSignal
 
+    filePath = os.path.join("recordings", str(recordingId)+".csv")
+    os.mkdir(directoryPath)
+    f = open(filePath, 'w')
+    # create the csv writer
+    writer = csv.writer(f)
+
+    # write a row to the csv file
+    writer.writerow(['time', 'student'])
+
+    # close the file
+
+
     sensorStatus="recording"
     stopSignal=False
     update()
@@ -194,14 +210,16 @@ def record(recordingId):
                student=int(round((doa/360)*4,0))
                if student == numberStudents:
                     student=0
-               print(student)
+               writer.writerow([totalTime, student])
                studentSpeaking[student]=studentSpeaking[student]+1
           else:
               silence=silence+1
+              writer.writerow([totalTime, -1])
           time.sleep(0.1)
           totalTime=totalTime+1
           if stopSignal:
              sensorStatus = "ready"
+             f.close()
              break
 
 def start_recording(recordingId):
