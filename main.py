@@ -18,6 +18,7 @@ import usb.util
 import time
 import os
 import sys
+import threading
 
 config = configparser.ConfigParser()
 config.read(sys.argv[1])
@@ -37,6 +38,8 @@ studentStatus = None
 studentTime = None
 studentRecentTime = None
 studentSpeaking = None
+
+recordingThread = None
 
 def initStudents():
         global studentStatus
@@ -156,41 +159,48 @@ def recomputePercentages():
 def update():
         client.publish("collaborationLights/heartbeat", sensorName + "," + sensorStatus)
 
+
+def record():
+    global sensorStatus
+    global stopSignal
+
+    sensorStatus="recording"
+    stopSignal=False
+    update()
+
+    totalTime = 0
+    speech = 0
+    silence = 0
+    initStudents()
+
+    showStudentStatus()
+    Mic_tuning= Tuning(dev)
+    totalTime = totalTime + 1
+    while True:
+          if totalTime % 300 == 0:
+               recomputePercentages()
+               clear()
+               showStudentStatus()
+          if Mic_tuning.is_voice():
+               speech=speech+1
+               doa=Mic_tuning.direction
+               student=int(round((doa/360)*4,0))
+               if student == numberStudents:
+                    student=0
+               studentSpeaking[student]=studentSpeaking[student]+1
+          else:
+              silence=silence+1
+          time.sleep(0.1)
+          totalTime=totalTime+1
+          if stopSignal:
+             sensorStatus = "ready"
+             break
+
 def start_recording():
-        global sensorStatus
-        global stopSignal
+        global recordingThread
 
-        sensorStatus="recording"
-        stopSignal=False
-        update()
-
-        totalTime = 0
-        speech = 0
-        silence = 0
-        initStudents()
-
-        showStudentStatus()
-        Mic_tuning= Tuning(dev)
-        totalTime = totalTime + 1
-        while True:
-                if totalTime % 300 == 0:
-                    recomputePercentages()
-                    clear()
-                    showStudentStatus()
-                if Mic_tuning.is_voice():
-                    speech=speech+1
-                    doa=Mic_tuning.direction
-                    student=int(round((doa/360)*4,0))
-                    if student == numberStudents:
-                        student=0
-                    studentSpeaking[student]=studentSpeaking[student]+1
-                else:
-                    silence=silence+1
-                time.sleep(0.1)
-                totalTime=totalTime+1
-                if stopSignal:
-                        break
-                        sensorStatus="ready"
+        recordingThread = threading.Thread(target=record)
+        recordingThread.start()
 
 def stop_recording():
     global sensorStatus
@@ -199,6 +209,7 @@ def stop_recording():
     if (sensorStatus=="recording"):
         stopSignal=True
         print("Stoping")
+        recordingThread.join()
     else:
         print("Not recording")
     update()
