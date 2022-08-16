@@ -217,6 +217,7 @@ def record(recordingId):
           totalTime=totalTime+1
           if stopSignal:
              sensorStatus = "ready"
+             showPositions()
              f.close()
              break
 
@@ -289,6 +290,7 @@ def showPositions():
 
 client = mqtt.Client()
 initialization()
+showPositions()
 sensorStatus="ready"
 while(True):
     try:
