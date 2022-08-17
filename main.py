@@ -167,7 +167,7 @@ def recomputePercentages(watchs):
                         studentStatus[i]="LowAlert"
         message=""
         for i in range(0,numberStudents):
-                message=message+studentTime[i].toString()
+                message=message+str(studentTime[i])
                 if i<numberStudents-1:
                         message=message+":"
         client.publish("collaborationLights/studentValues", message)
