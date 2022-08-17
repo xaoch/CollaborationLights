@@ -170,7 +170,7 @@ def recomputePercentages(watchs):
                 message=message+studentTime[i].toString()
                 if i<numberStudents-1:
                         message=message+":"
-        client.publish("collaborationLights/studentStatus", message)
+        client.publish("collaborationLights/studentValues", message)
 
 def update():
         client.publish("collaborationLights/heartbeat", sensorName + "," + sensorStatus)
