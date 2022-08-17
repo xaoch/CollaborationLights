@@ -165,7 +165,12 @@ def recomputePercentages(watchs):
                         if studentStatus[i]!="LowAlert" and watchs:
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/LowAlert")
                         studentStatus[i]="LowAlert"
-        client.publish("collaborationLights/studentStatus", str(studentTime))
+        message=""
+        for i in range(0,numberStudents):
+                message=message+studentTime[i].toString()
+                if i<numberStudents-1:
+                        message=message+":"
+        client.publish("collaborationLights/studentStatus", message)
 
 def update():
         client.publish("collaborationLights/heartbeat", sensorName + "," + sensorStatus)
