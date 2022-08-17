@@ -132,7 +132,7 @@ def showStudentStatus():
                 drawShape(studentStatus[i],startingColumn,endingColumn)
         led.update()
 
-def recomputePercentages():
+def recomputePercentages(watchs):
         print(studentTime)
         totalSpeakingTime=0
         totalRecentSpeakingTime=0
@@ -146,23 +146,23 @@ def recomputePercentages():
                 percentage=studentTime[i]/totalSpeakingTime
                 percentageRecent=studentRecentTime[i]/totalRecentSpeakingTime
                 if percentage>0.50:
-                        if studentStatus[i]!="HighAlert":
-                                client.publish("collaborationLights/studentStatus", str(i+1) + "/HighAlert")
+                        if studentStatus[i]!="HighAlert" and watchs:
+                                    client.publish("collaborationLights/studentStatus", str(i+1) + "/HighAlert")
                         studentStatus[i]="HighAlert"
                 elif percentage>0.35:
-                        if studentStatus[i]!="High":
+                        if studentStatus[i]!="High" and watchs:
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/High")
                         studentStatus[i]="High"
                 elif percentage>0.15:
-                        if studentStatus[i]!="Middle":
+                        if studentStatus[i]!="Middle" and watchs:
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                         studentStatus[i]="Middle"
                 elif percentage>0.05:
-                        if studentStatus[i]!="Low":
+                        if studentStatus[i]!="Low" and watchs:
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Low")
                         studentStatus[i]="Low"
                 else:
-                        if studentStatus[i]!="LowAlert":
+                        if studentStatus[i]!="LowAlert" and watchs:
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/LowAlert")
                         studentStatus[i]="LowAlert"
 
@@ -170,7 +170,7 @@ def update():
         client.publish("collaborationLights/heartbeat", sensorName + "," + sensorStatus)
 
 
-def record(recordingId):
+def record(recordingId,lights,watchs):
     global sensorStatus
     global stopSignal
     print("Recording")
@@ -190,14 +190,19 @@ def record(recordingId):
     silence = 0
     initStudents()
 
-    showStudentStatus()
+    if lights:
+        showStudentStatus()
+    else:
+        clear()
+        led.update()
     Mic_tuning= Tuning(dev)
     totalTime = totalTime + 1
     while True:
           if totalTime % 120 == 0:
-               recomputePercentages()
-               clear()
-               showStudentStatus()
+               recomputePercentages(watchs)
+               if lights:
+                    clear()
+                    showStudentStatus()
           if Mic_tuning.is_voice():
                speech=speech+1
                doa=Mic_tuning.direction
@@ -222,10 +227,10 @@ def record(recordingId):
              f.close()
              break
 
-def start_recording(recordingId):
+def start_recording(recordingId,lights,watchs):
         global recordingThread
         print("Initializing recording thread")
-        recordingThread = threading.Thread(target=record, args=(recordingId,))
+        recordingThread = threading.Thread(target=record, args=(recordingId,lights,watchs,))
         recordingThread.start()
         print("Recording thread initialized")
 
@@ -256,7 +261,17 @@ def on_message(client, userdata, msg):
         if (sensorStatus == "ready"):
             print("Starting")
             recordingId=messagePart[1]
-            start_recording(recordingId)
+            lights=messagePart[2]
+            if (lights=="true"):
+                lights=True
+            else:
+                lights=False
+            watchs=messagePart[3]
+            if (watchs=="true"):
+                watchs=True
+            else:
+                watchs=False
+            start_recording(recordingId,lights,watchs)
         else:
             print("Not ready")
     elif (messagePart[0] in "stop"):
