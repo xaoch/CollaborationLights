@@ -107,7 +107,7 @@ class Tuning:
             0, cmd, id, length, self.TIMEOUT)
         print(response)
 
-        response = struct.unpack(b'ii', response.tostring())
+        response = struct.unpack(b'ii', response.tobytes())
 
         if data[2] == 'int':
             result = response[0]
