@@ -21,6 +21,8 @@ import sys
 import threading
 import csv
 
+from recording import RecorderThread
+
 config = configparser.ConfigParser()
 config.read(sys.argv[1])
 
@@ -42,6 +44,7 @@ studentRecentTime = None
 studentSpeaking = None
 
 recordingThread = None
+audioRecordThread = None
 
 def initStudents():
         global studentStatus
@@ -235,9 +238,13 @@ def record(recordingId,lights,watchs):
 
 def start_recording(recordingId,lights,watchs):
         global recordingThread
+        global audioRecordThread
         print("Initializing recording thread")
+        audiofilePath = os.path.join("recordings", str(recordingId) + ".wav")
         recordingThread = threading.Thread(target=record, args=(recordingId,lights,watchs,))
+        audioRecordThread = RecorderThread(audiofilePath)
         recordingThread.start()
+        audioRecordThread.start()
         print("Recording thread initialized")
 
 def stop_recording():
@@ -248,6 +255,7 @@ def stop_recording():
         stopSignal=True
         print("Stoping")
         recordingThread.join()
+        audioRecordThread.stop()
         showPositions()
     else:
         print("Not recording")
