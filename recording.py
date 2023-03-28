@@ -8,7 +8,7 @@ class RecorderThread(threading.Thread):
         self.process = None
 
     def run(self):
-        command = ['arecord', '-D','plughw:1,0', '-f', 'S16_LE','-c' ,'2','-r','44100',  self.filename]
+        command = ['arecord', '-D','plughw:1,0', '-f', 'S16_LE','-c' ,'1','-r','44100',  self.filename]
         self.process = subprocess.Popen(command)
         self.process.wait()
 
