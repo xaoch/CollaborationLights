@@ -150,23 +150,23 @@ def recomputePercentages(watchs):
                 percentage=studentTime[i]/totalSpeakingTime
                 percentageRecent=studentRecentTime[i]/totalRecentSpeakingTime
                 if percentage>0.50:
-                        if studentStatus[i]!="HighAlert" and watchs:
+                        if studentStatus[i]!="HighAlert":
                                     client.publish("collaborationLights/studentStatus", str(i+1) + "/HighAlert")
                         studentStatus[i]="HighAlert"
                 elif percentage>0.35:
-                        if studentStatus[i]!="High" and watchs:
+                        if studentStatus[i]!="High":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/High")
                         studentStatus[i]="High"
                 elif percentage>0.15:
-                        if studentStatus[i]!="Middle" and watchs:
+                        if studentStatus[i]!="Middle":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                         studentStatus[i]="Middle"
                 elif percentage>0.05:
-                        if studentStatus[i]!="Low" and watchs:
+                        if studentStatus[i]!="Low":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Low")
                         studentStatus[i]="Low"
                 else:
-                        if studentStatus[i]!="LowAlert" and watchs:
+                        if studentStatus[i]!="LowAlert":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/LowAlert")
                         studentStatus[i]="LowAlert"
         message=""
@@ -180,18 +180,33 @@ def update():
         client.publish("collaborationLights/heartbeat", sensorName + "," + sensorStatus)
 
 
+def recordValues(timestamp,writerAmounts, writerStatus):
+    global studentStatus
+    global studentTime
+    writerAmounts.writerow([timestamp]+studentTime)
+    writerStatus.writerow([timestamp]+studentStatus)
+
+
 def record(recordingId,lights,watchs):
     global sensorStatus
     global stopSignal
     global startTime
     print("Recording")
     filePath = os.path.join("recordings", str(recordingId)+".csv")
+    filePathAmounts = os.path.join("recordings", str(recordingId)+"_amounts.csv")
+    filePathStatus = os.path.join("recordings", str(recordingId)+"_status.csv")
     f = open(filePath, 'w')
+    famounts = open(filePathAmounts,'w')
+    fstatus = open(filePathStatus,'w')
     # create the csv writer
     writer = csv.writer(f)
+    writerAmounts = csv.writer(famounts)
+    writerStatus = csv.writer(fstatus)
     # write a row to the csv file
     writer.writerow(['id','time', 'student'])
-    print("File created")
+    writerAmounts.writerow(['time','One','Two','Three','Four'])
+    writerStatus.writerow(['time', 'One', 'Two', 'Three', 'Four'])
+    print("Files created")
     sensorStatus="recording"
     stopSignal=False
     update()
@@ -209,14 +224,15 @@ def record(recordingId,lights,watchs):
     Mic_tuning= Tuning(dev)
     totalTime = totalTime + 1
     while True:
+          timestamp = time.time() - startTime
           if totalTime % 120 == 0:
                recomputePercentages(watchs)
                if lights:
                     clear()
                     showStudentStatus()
+               recordValues(timestamp,writerAmounts,writerStatus)
           if Mic_tuning.is_voice():
                speech=speech+1
-               timestamp = time.time() - startTime
                doa=Mic_tuning.direction
                doa=doa+correction
                if doa>360:
@@ -230,7 +246,6 @@ def record(recordingId,lights,watchs):
                studentSpeaking[student]=studentSpeaking[student]+1
           else:
               silence=silence+1
-              timestamp = time.time() - startTime
               writer.writerow([totalTime, timestamp,-1])
           time.sleep(0.1)
           totalTime=totalTime+1
@@ -238,6 +253,8 @@ def record(recordingId,lights,watchs):
              sensorStatus = "ready"
              showPositions()
              f.close()
+             famounts.close()
+             fstatus.close()
              break
 
 def start_recording(recordingId,lights,watchs):
