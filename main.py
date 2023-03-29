@@ -45,6 +45,7 @@ studentSpeaking = None
 
 recordingThread = None
 audioRecordThread = None
+startTime = None
 
 def initStudents():
         global studentStatus
@@ -182,13 +183,14 @@ def update():
 def record(recordingId,lights,watchs):
     global sensorStatus
     global stopSignal
+    global startTime
     print("Recording")
     filePath = os.path.join("recordings", str(recordingId)+".csv")
     f = open(filePath, 'w')
     # create the csv writer
     writer = csv.writer(f)
     # write a row to the csv file
-    writer.writerow(['time', 'student'])
+    writer.writerow(['id','time', 'student'])
     print("File created")
     sensorStatus="recording"
     stopSignal=False
@@ -214,6 +216,7 @@ def record(recordingId,lights,watchs):
                     showStudentStatus()
           if Mic_tuning.is_voice():
                speech=speech+1
+               timestamp = time.time() - startTime
                doa=Mic_tuning.direction
                doa=doa+correction
                if doa>360:
@@ -223,7 +226,7 @@ def record(recordingId,lights,watchs):
                student=int(round((doa/360)*4,0))
                if student == numberStudents:
                     student=0
-               writer.writerow([totalTime, student])
+               writer.writerow([totalTime, timestamp,student])
                studentSpeaking[student]=studentSpeaking[student]+1
           else:
               silence=silence+1
@@ -239,10 +242,12 @@ def record(recordingId,lights,watchs):
 def start_recording(recordingId,lights,watchs):
         global recordingThread
         global audioRecordThread
+        global startTime
         print("Initializing recording thread")
         audiofilePath = os.path.join("recordings", str(recordingId) + ".wav")
         recordingThread = threading.Thread(target=record, args=(recordingId,lights,watchs,))
         audioRecordThread = RecorderThread(audiofilePath)
+        startTime=time.time()
         recordingThread.start()
         audioRecordThread.start()
         print("Recording thread initialized")
