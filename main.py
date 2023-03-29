@@ -230,7 +230,8 @@ def record(recordingId,lights,watchs):
                studentSpeaking[student]=studentSpeaking[student]+1
           else:
               silence=silence+1
-              writer.writerow([totalTime, -1])
+              timestamp = time.time() - startTime
+              writer.writerow([totalTime, timestamp,-1])
           time.sleep(0.1)
           totalTime=totalTime+1
           if stopSignal:
