@@ -109,7 +109,7 @@ def drawShape(status,startingColumn,endingColumn):
         elif status=="Middle":
                 for column in range(startingColumn+2,startingColumn+6):
                         for row in range(2,6):
-                                led.set(column,row,(0,0,200))
+                                led.set(column,row,(200,0,0))
         elif status=="High":
                 for column in range(startingColumn+1,startingColumn+7):
                         for row in range(1,7):
@@ -149,19 +149,19 @@ def recomputePercentages(watchs):
         for i in range(0,numberStudents):
                 percentage=studentTime[i]/totalSpeakingTime
                 percentageRecent=studentRecentTime[i]/totalRecentSpeakingTime
-                if percentage>0.50:
+                if percentage>0.40:
                         if studentStatus[i]!="HighAlert":
                                     client.publish("collaborationLights/studentStatus", str(i+1) + "/HighAlert")
                         studentStatus[i]="HighAlert"
-                elif percentage>0.35:
+                elif percentage>0.30:
                         if studentStatus[i]!="High":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/High")
                         studentStatus[i]="High"
-                elif percentage>0.15:
+                elif percentage>0.20:
                         if studentStatus[i]!="Middle":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                         studentStatus[i]="Middle"
-                elif percentage>0.05:
+                elif percentage>0.10:
                         if studentStatus[i]!="Low":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Low")
                         studentStatus[i]="Low"
