@@ -62,10 +62,6 @@ def initStudents():
                 studentStatus[i]= "Middle"
                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                 studentTime[i]= 240
-                if i==3:
-                    studentTime[i]=240
-                else:
-                    studentTime[i] = 0
                 studentRecentTime[i]=300
                 studentSpeaking[i]=0
 
