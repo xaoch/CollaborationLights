@@ -62,6 +62,10 @@ def initStudents():
                 studentStatus[i]= "Middle"
                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                 studentTime[i]= 240
+                if i==4:
+                    studentTime[i]=240
+                else:
+                    studentTime[i] = 0
                 studentRecentTime[i]=300
                 studentSpeaking[i]=0
 
@@ -227,7 +231,8 @@ def record(recordingId,lights,watchs,participants):
     totalTime = 0
     speech = 0
     silence = 0
-    initStudents()
+
+    initStudents(participants)
 
     if lights:
         showStudentStatus()
