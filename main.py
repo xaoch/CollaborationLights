@@ -136,10 +136,23 @@ def showStudentStatus():
                 drawShape(studentStatus[i],startingColumn,endingColumn)
         led.update()
 
-def recomputePercentages(watchs):
+def recomputePercentages(watchs,participants):
         print(studentTime)
         totalSpeakingTime=0
         totalRecentSpeakingTime=0
+        if participants == 3:
+            percentageHighAlert=0.53
+            percentageHigh=0.40
+            percentageMiddle=0.26
+            percentageLow=0.13
+        else:
+            percentageHighAlert=0.40
+            percentageHigh=0.30
+            percentageMiddle=0.20
+            percentageLow=0.10
+
+
+
         for i in range(0,numberStudents):
                 studentTime[i]=studentTime[i]+studentSpeaking[i]
                 totalSpeakingTime=totalSpeakingTime+studentTime[i]
@@ -149,19 +162,19 @@ def recomputePercentages(watchs):
         for i in range(0,numberStudents):
                 percentage=studentTime[i]/totalSpeakingTime
                 percentageRecent=studentRecentTime[i]/totalRecentSpeakingTime
-                if percentage>0.40:
+                if percentage>percentageHighAlert:
                         if studentStatus[i]!="HighAlert":
                                     client.publish("collaborationLights/studentStatus", str(i+1) + "/HighAlert")
                         studentStatus[i]="HighAlert"
-                elif percentage>0.30:
+                elif percentage>percentageHigh:
                         if studentStatus[i]!="High":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/High")
                         studentStatus[i]="High"
-                elif percentage>0.20:
+                elif percentage>percentageMiddle:
                         if studentStatus[i]!="Middle":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                         studentStatus[i]="Middle"
-                elif percentage>0.10:
+                elif percentage>percentageLow:
                         if studentStatus[i]!="Low":
                                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Low")
                         studentStatus[i]="Low"
@@ -187,7 +200,7 @@ def recordValues(timestamp,writerAmounts, writerStatus):
     writerStatus.writerow([timestamp]+studentStatus)
 
 
-def record(recordingId,lights,watchs):
+def record(recordingId,lights,watchs,participants):
     global sensorStatus
     global stopSignal
     global startTime
@@ -226,7 +239,7 @@ def record(recordingId,lights,watchs):
     while True:
           timestamp = time.time() - startTime
           if totalTime % 120 == 0:
-               recomputePercentages(watchs)
+               recomputePercentages(watchs,participants)
                if lights:
                     clear()
                     showStudentStatus()
@@ -257,13 +270,13 @@ def record(recordingId,lights,watchs):
              fstatus.close()
              break
 
-def start_recording(recordingId,lights,watchs):
+def start_recording(recordingId,lights,watchs,participants):
         global recordingThread
         global audioRecordThread
         global startTime
         print("Initializing recording thread")
         audiofilePath = os.path.join("recordings", str(recordingId) + ".wav")
-        recordingThread = threading.Thread(target=record, args=(recordingId,lights,watchs,))
+        recordingThread = threading.Thread(target=record, args=(recordingId,lights,watchs,participants))
         audioRecordThread = RecorderThread(audiofilePath)
         startTime=time.time()
         recordingThread.start()
@@ -308,7 +321,8 @@ def on_message(client, userdata, msg):
                 watchs=True
             else:
                 watchs=False
-            start_recording(recordingId,lights,watchs)
+            participants=messagePart[4]
+            start_recording(recordingId,lights,watchs,int(participants))
         else:
             print("Not ready")
     elif (messagePart[0] in "stop"):
