@@ -47,7 +47,7 @@ recordingThread = None
 audioRecordThread = None
 startTime = None
 
-def initStudents():
+def initStudents(participants):
         global studentStatus
         global studentTime
         global studentRecentTime
@@ -62,6 +62,8 @@ def initStudents():
                 studentStatus[i]= "Middle"
                 client.publish("collaborationLights/studentStatus", str(i+1) + "/Middle")
                 studentTime[i]= 240
+                if i==3 and participants==3:
+                    studentTime[i]=0
                 studentRecentTime[i]=300
                 studentSpeaking[i]=0
 
